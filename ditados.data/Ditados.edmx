@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="Ditados.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="DitadosTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Ditados" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="DitadosContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Writers" EntityType="Ditados.Writer" />
+          <EntitySet Name="Countries" EntityType="Ditados.Country" />
+          <AssociationSet Name="CountryWriter" Association="Ditados.CountryWriter">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Writer" EntitySet="Writers" />
+          </AssociationSet>
+          <EntitySet Name="Quotes" EntityType="Ditados.Quote" />
+          <AssociationSet Name="WriterQuote" Association="Ditados.WriterQuote">
+            <End Role="Writer" EntitySet="Writers" />
+            <End Role="Quote" EntitySet="Quotes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Writer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Country" Relationship="Ditados.CountryWriter" FromRole="Writer" ToRole="Country" />
+          <Property Name="CountryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Quotes" Relationship="Ditados.WriterQuote" FromRole="Writer" ToRole="Quote" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" />
+          <Property Name="DeathDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Writers" Relationship="Ditados.CountryWriter" FromRole="Country" ToRole="Writer" />
+        </EntityType>
+        <Association Name="CountryWriter">
+          <End Type="Ditados.Country" Role="Country" Multiplicity="1" />
+          <End Type="Ditados.Writer" Role="Writer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Writer">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Quote">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="language" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Writer" Relationship="Ditados.WriterQuote" FromRole="Quote" ToRole="Writer" />
+          <Property Name="WriterId" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" />
+          <Property Name="language" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="WriterQuote">
+          <End Type="Ditados.Writer" Role="Writer" Multiplicity="1" />
+          <End Type="Ditados.Quote" Role="Quote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Writer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Quote">
+              <PropertyRef Name="WriterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Ditados" />
+        <Alias Key="Target" Value="Ditados.Store" />
+        <EntityContainerMapping CdmEntityContainer="DitadosContainer" StorageEntityContainer="DitadosTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
